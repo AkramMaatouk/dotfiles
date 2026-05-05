@@ -26,6 +26,8 @@ window-padding-x       = 8
 window-padding-y       = 8
 window-padding-balance = true
 window-decoration      = auto
+background-opacity     = 0.8
+background-blur-radius = 20
 
 # ── Scrollback ────────────────────────────────
 scrollback-limit       = 10000
@@ -33,9 +35,6 @@ scrollback-limit       = 10000
 # ── Shell integration ─────────────────────────
 shell-integration      = detect
 
-# ── SSH ───────────────────────────────────────
-# Ghostty handles terminfo forwarding natively — no kitten needed.
-# Just use plain `ssh user@host` and Ghostty propagates TERM correctly.
 
 # ── Keybindings ───────────────────────────────
 # New tab / split in same working directory
