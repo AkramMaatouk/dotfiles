@@ -3,8 +3,7 @@
 # ─────────────────────────────────────────────
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME=random
-ZSH_THEME_RANDOM_CANDIDATES=("robbyrussell" "awesomepanda")
+ZSH_THEME=""
 
 zstyle ':omz:update' mode reminder
 COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
@@ -31,22 +30,6 @@ if [ -z "$TMUX" ]; then
   tmux attach-session -t main 2>/dev/null || tmux new-session -s main
 fi
 
-# ─────────────────────────────────────────────
-# SSH agent: persistent across tmux sessions
-# Stores agent socket in ~/.ssh/agent-env
-# ─────────────────────────────────────────────
-SSH_ENV="$HOME/.ssh/agent-env"
 
-_start_ssh_agent() {
-  ssh-agent > "$SSH_ENV"
-  chmod 600 "$SSH_ENV"
-  source "$SSH_ENV" > /dev/null
-  ssh-add ~/.ssh/gitub_ssh
-}
+eval "$(starship init zsh)"
 
-if [ -f "$SSH_ENV" ]; then
-  source "$SSH_ENV" > /dev/null
-  kill -0 "$SSH_AGENT_PID" 2>/dev/null || _start_ssh_agent
-else
-  _start_ssh_agent
-fi

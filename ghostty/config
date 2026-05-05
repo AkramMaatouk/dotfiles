@@ -1,0 +1,60 @@
+# ─────────────────────────────────────────────
+# ghostty/config  →  ~/.config/ghostty/config
+# Theme: Catppuccin Mocha (built-in, no download needed)
+# Font:  JetBrainsMono Nerd Font
+# ─────────────────────────────────────────────
+
+# ── Font ──────────────────────────────────────
+font-family            = JetBrainsMono Nerd Font
+font-size              = 13
+font-feature           = +liga
+font-feature           = +calt
+font-feature           = +ss01   # Alternate a
+font-feature           = +ss02   # Alternate g
+font-thicken           = false
+
+# ── Theme ─────────────────────────────────────
+# Catppuccin Mocha is shipped with Ghostty — no extra files needed.
+theme = Catppuccin Mocha
+
+# ── Cursor ────────────────────────────────────
+cursor-style           = block
+cursor-style-blink     = true
+
+# ── Window ────────────────────────────────────
+window-padding-x       = 8
+window-padding-y       = 8
+window-padding-balance = true
+window-decoration      = auto
+
+# ── Scrollback ────────────────────────────────
+scrollback-limit       = 10000
+
+# ── Shell integration ─────────────────────────
+shell-integration      = detect
+
+# ── SSH ───────────────────────────────────────
+# Ghostty handles terminfo forwarding natively — no kitten needed.
+# Just use plain `ssh user@host` and Ghostty propagates TERM correctly.
+
+# ── Keybindings ───────────────────────────────
+# New tab / split in same working directory
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+shift+d=new_split:right
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+l=goto_split:right
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+j=goto_split:bottom
+
+# Tab navigation
+keybind = ctrl+shift+right_bracket=next_tab
+keybind = ctrl+shift+left_bracket=previous_tab
+
+# Font size
+keybind = ctrl+shift+plus=increase_font_size:1
+keybind = ctrl+shift+minus=decrease_font_size:1
+keybind = ctrl+shift+0=reset_font_size
+
+# Clipboard
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard

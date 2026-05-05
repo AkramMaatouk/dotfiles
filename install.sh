@@ -79,15 +79,7 @@ safe_link "$DOTFILES_DIR/zsh/.zshrc"   "$HOME/.zshrc"
 safe_link "$DOTFILES_DIR/zsh/custom"   "$HOME/.oh-my-zsh/custom"
 
 # ─────────────────────────────────────────────
-# 3. Kitty
-# ~/.config/kitty       → dotfiles/kitty
-# ─────────────────────────────────────────────
-section "Kitty"
-
-safe_link "$DOTFILES_DIR/kitty"   "$HOME/.config/kitty"
-
-# ─────────────────────────────────────────────
-# 4. Neovim
+# 3. Neovim
 # ~/.config/nvim        → dotfiles/nvim
 # ─────────────────────────────────────────────
 section "Neovim"
@@ -95,7 +87,7 @@ section "Neovim"
 safe_link "$DOTFILES_DIR/nvim"    "$HOME/.config/nvim"
 
 # ─────────────────────────────────────────────
-# 5. Tmux
+# 4. Tmux
 # ~/.config/tmux        → dotfiles/tmux
 # ─────────────────────────────────────────────
 section "Tmux"
@@ -103,7 +95,7 @@ section "Tmux"
 safe_link "$DOTFILES_DIR/tmux"    "$HOME/.config/tmux"
 
 # ─────────────────────────────────────────────
-# 6. Pi Agent
+# 5. Pi Agent
 # ~/.config/pi-agent    → dotfiles/pi-agent
 # ─────────────────────────────────────────────
 section "Pi Agent"
@@ -111,7 +103,25 @@ section "Pi Agent"
 safe_link "$DOTFILES_DIR/pi-agent"  "$HOME/.config/pi-agent"
 
 # ─────────────────────────────────────────────
-# 7. Secrets placeholder
+# 6. Ghostty
+# ~/.config/ghostty     → dotfiles/ghostty
+# ─────────────────────────────────────────────
+section "Ghostty"
+
+safe_link "$DOTFILES_DIR/ghostty"   "$HOME/.config/ghostty"
+
+# ─────────────────────────────────────────────
+# 7. Starship
+# ~/.config/starship.toml → dotfiles/starship/starship.toml
+# Note: starship.toml is a single file at the root of ~/.config,
+# not a directory — so we link the file directly, not the folder.
+# ─────────────────────────────────────────────
+section "Starship"
+
+safe_link "$DOTFILES_DIR/starship/starship.toml"   "$HOME/.config/starship.toml"
+
+# ─────────────────────────────────────────────
+# 8. Secrets placeholder
 # Creates ~/.config/zsh/secrets.zsh if it does not exist.
 # This file is NOT tracked by git — put PG_PASSWORD etc. here.
 # ─────────────────────────────────────────────
