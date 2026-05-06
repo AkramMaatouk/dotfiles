@@ -5,9 +5,6 @@
 # ─────────────────────────────────────────────
 
 # ── Prompt layout ─────────────────────────────
-# Single line left prompt + right prompt for time/duration.
-# Avoids the double-cursor bug caused by two-line formats
-# conflicting with zsh's own line handling.
 format = """
 $os\
 $username\
@@ -20,6 +17,7 @@ $python\
 $nodejs\
 $rust\
 $golang\
+$env_var\
 $character\
 """
 
@@ -69,12 +67,12 @@ vimcmd_symbol  = "[❮](bold mauve)"
 
 # ── Directory ─────────────────────────────────
 [directory]
-style            = "bold blue"
-read_only        = " 󰌾"
-read_only_style  = "red"
+style             = "bold blue"
+read_only         = " 󰌾"
+read_only_style   = "red"
 truncation_length = 4
-truncate_to_repo = true
-format           = "[ 󰉋 $path]($style)[$read_only]($read_only_style) "
+truncate_to_repo  = true
+format            = "[ 󰉋 $path]($style)[$read_only]($read_only_style) "
 
 # ── Git branch ────────────────────────────────
 [git_branch]
@@ -101,7 +99,6 @@ style  = "bold red"
 format = "([$state($progress_current/$progress_total)]($style) )"
 
 # ── Username ──────────────────────────────────
-# Only shown when root or over SSH
 [username]
 style_user  = "bold teal"
 style_root  = "bold red"
@@ -109,11 +106,10 @@ format      = "[$user]($style) "
 show_always = false
 
 # ── Hostname ──────────────────────────────────
-# Shown when connected over SSH — critical for Pi sessions
 [hostname]
-ssh_only  = true
-style     = "bold peach"
-format    = "[@$hostname]($style) "
+ssh_only   = true
+style      = "bold peach"
+format     = "[@$hostname]($style) "
 ssh_symbol = " "
 
 # ── OS icon ───────────────────────────────────
@@ -123,24 +119,32 @@ style    = "subtext0"
 format   = "[$symbol]($style) "
 
 [os.symbols]
-Linux   = " "
-Macos   = " "
-Windows = "󰍲 "
-Raspbian = " "  # Shown on your Pi sessions
+Linux    = " "
+Macos    = " "
+Windows  = "󰍲 "
+Raspbian = " "
 
 # ── Command duration ──────────────────────────
 [cmd_duration]
-min_time           = 2000   # Only show for commands > 2s
-style              = "bold yellow"
-format             = "[ 󱎫 $duration]($style) "
-show_milliseconds  = false
+min_time          = 2000
+style             = "bold yellow"
+format            = "[ 󱎫 $duration]($style) "
+show_milliseconds = false
 
 # ── Time ──────────────────────────────────────
 [time]
-disabled  = false
-style     = "subtext0"
-format    = "[ $time]($style) "
+disabled    = false
+style       = "subtext0"
+format      = "[ $time]($style) "
 time_format = "%H:%M"
+
+# ── Tmux indicator ────────────────────────────
+# Shows 󰓩 when inside a tmux session.
+# $env_var.TMUX is set by tmux automatically — no value needed, just presence.
+[env_var.TMUX]
+default = ""
+format  = "[󰓩 ]($style)"
+style   = "bold mauve"
 
 # ── Python ────────────────────────────────────
 [python]
@@ -165,14 +169,3 @@ format = "[$symbol$version]($style) "
 symbol = " "
 style  = "bold sky"
 format = "[$symbol$version]($style) "
-
-# ── Tmux indicator ────────────────────────────
-# No native Starship module for tmux, but the hostname/SSH modules
-# already surface the most useful context for Pi remote sessions.
-# You can add $env_var to surface $TMUX_PANE if desired.
-[env_var.TMUX]
-variable = "TMUX"
-default  = ""
-symbol   = "󰓩 "
-style    = "bold mauve"
-format   = "[$symbol]($style)"

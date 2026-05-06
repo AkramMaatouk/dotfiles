@@ -1,25 +1,29 @@
 # ─────────────────────────────────────────────
 # ghostty/config  →  ~/.config/ghostty/config
-# Theme: Catppuccin Mocha (built-in, no download needed)
+# Theme: Catppuccin Mocha (built-in)
 # Font:  JetBrainsMono Nerd Font
+#
+# Workflow note:
+#   tmux auto-attaches on every shell open (.zshrc).
+#   Ghostty splits/tabs below are kept as a fallback
+#   but tmux (prefix + " / %) is the primary multiplexer.
 # ─────────────────────────────────────────────
 
 # ── Font ──────────────────────────────────────
-font-family            = JetBrainsMono Nerd Font
-font-size              = 13
-font-feature           = +liga
-font-feature           = +calt
-font-feature           = +ss01   # Alternate a
-font-feature           = +ss02   # Alternate g
-font-thicken           = false
+font-family   = JetBrainsMono Nerd Font
+font-size     = 13
+font-feature  = +liga
+font-feature  = +calt
+font-feature  = +ss01   # Alternate a
+font-feature  = +ss02   # Alternate g
+font-thicken  = false
 
 # ── Theme ─────────────────────────────────────
-# Catppuccin Mocha is shipped with Ghostty — no extra files needed.
 theme = Catppuccin Mocha
 
 # ── Cursor ────────────────────────────────────
-cursor-style           = block
-cursor-style-blink     = true
+cursor-style       = block
+cursor-style-blink = true
 
 # ── Window ────────────────────────────────────
 window-padding-x       = 8
@@ -30,27 +34,36 @@ background-opacity     = 0.8
 background-blur-radius = 20
 
 # ── Scrollback ────────────────────────────────
-scrollback-limit       = 10000
+# Kept modest — tmux scrollback handles most of this
+scrollback-limit = 5000
 
 # ── Shell integration ─────────────────────────
-shell-integration      = detect
-
+# "detect" lets Ghostty inject its own integration;
+# works correctly even when tmux wraps the shell.
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
 
 # ── Keybindings ───────────────────────────────
-# New tab / split in same working directory
+# Note: ctrl+h/j/k/l (no shift) are owned by vim-tmux-navigator.
+# Ghostty uses ctrl+shift+* to avoid that conflict.
+
+# Tabs (fallback — prefer tmux windows)
 keybind = ctrl+shift+t=new_tab
+keybind = ctrl+shift+right_bracket=next_tab
+keybind = ctrl+shift+left_bracket=previous_tab
+
+# Splits (fallback — prefer tmux splits)
 keybind = ctrl+shift+d=new_split:right
+keybind = ctrl+shift+minus=new_split:down
+
+# Split navigation (ctrl+shift avoids vim-tmux-navigator on ctrl only)
 keybind = ctrl+shift+h=goto_split:left
 keybind = ctrl+shift+l=goto_split:right
 keybind = ctrl+shift+k=goto_split:top
 keybind = ctrl+shift+j=goto_split:bottom
 
-# Tab navigation
-keybind = ctrl+shift+right_bracket=next_tab
-keybind = ctrl+shift+left_bracket=previous_tab
-
 # Font size
-keybind = ctrl+shift+plus=increase_font_size:1
+keybind = ctrl+shift+equal=increase_font_size:1
 keybind = ctrl+shift+minus=decrease_font_size:1
 keybind = ctrl+shift+0=reset_font_size
 

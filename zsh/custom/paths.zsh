@@ -14,8 +14,8 @@ eval "$(pyenv init - zsh)"
 # nvm
 # ─────────────────────────────────────────────
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ]            && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ]   && \. "$NVM_DIR/bash_completion"
+[ -s "$NVM_DIR/nvm.sh" ]          && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # ─────────────────────────────────────────────
 # pnpm
@@ -36,6 +36,12 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 # ─────────────────────────────────────────────
 export PATH="/home/akram/develop/flutter/bin:$PATH"
 
+
+# ─────────────────────────────────────────────
+# Fuzzy Finder
+# ─────────────────────────────────────────────
+FZF_BASE=/usr/bin/fzf  
+
 # ─────────────────────────────────────────────
 # Android SDK
 # ─────────────────────────────────────────────
@@ -53,10 +59,15 @@ export PATH="/opt/genymobile/genymotion:$PATH"
 export CHROME_EXECUTABLE=/usr/bin/brave-browser
 
 # ─────────────────────────────────────────────
-# OpenSSL (system pkg-config / linker)
+# OpenSSL (pkg-config / linker)
+# Fixed: /usr/bin/openssl is the binary, not a lib dir.
+# System OpenSSL headers live in /usr/lib/pkgconfig.
 # ─────────────────────────────────────────────
-export PKG_CONFIG_PATH="/usr/bin/openssl/lib/pkgconfig:$PKG_CONFIG_PATH"
-export LD_LIBRARY_PATH="/usr/bin/openssl/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
+# LD_LIBRARY_PATH for OpenSSL is not normally needed on Linux;
+# the system linker finds it via ldconfig. Remove if you had no
+# specific reason for it — it can mask linker issues.
+# export LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
 
 # ─────────────────────────────────────────────
 # rbenv
@@ -65,11 +76,10 @@ eval "$(~/.rbenv/bin/rbenv init - --no-rehash zsh)"
 
 # ─────────────────────────────────────────────
 # PostgreSQL credentials
-# Keep secrets out of git — set these in ~/.config/zsh/secrets.zsh
-# and source that file here if it exists
+# PG_USER is fine to export here.
+# Keep PG_PASSWORD in ~/.config/zsh/secrets.zsh (not tracked by git).
 # ─────────────────────────────────────────────
 export PG_USER=postgres
-# export PG_PASSWORD=   ← put this in ~/.config/zsh/secrets.zsh (not tracked)
 [ -f "$HOME/.config/zsh/secrets.zsh" ] && source "$HOME/.config/zsh/secrets.zsh"
 
 # ─────────────────────────────────────────────
