@@ -1,0 +1,15 @@
+# ── Secrets ────────────────────────────────────
+# Created by install.sh; never committed.
+.config/zsh/secrets.zsh
+
+# ── Installed plugins ──────────────────────────
+# Cloned by install.sh from plugins.txt; not tracked.
+zsh/.oh-my-zsh/custom/plugins/
+
+# ── OS / editor noise ──────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/

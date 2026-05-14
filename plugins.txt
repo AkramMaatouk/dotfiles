@@ -1,0 +1,17 @@
+# zsh-plugins.txt
+# ─────────────────────────────────────────────────────────────────────────────
+# Custom ZSH plugins to clone into ~/.oh-my-zsh/custom/plugins/
+#
+# Format:  one Git URL per line
+#   - The repo name (last URL segment) becomes the plugin folder name.
+#   - Lines starting with # are comments; blank lines are ignored.
+#
+# To add a plugin:
+#   1. Add its URL here.
+#   2. Add the folder name to the plugins=(...) list in zsh/.zshrc.
+#   3. Run ./install.sh  (idempotent — already-cloned plugins are skipped).
+# ─────────────────────────────────────────────────────────────────────────────
+
+https://github.com/zsh-users/zsh-autosuggestions
+https://github.com/zsh-users/zsh-syntax-highlighting
+https://github.com/marlonrichert/zsh-autocomplete

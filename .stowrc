@@ -1,0 +1,8 @@
+--target=~/.config
+--ignore=README\.md
+--ignore=install\.sh
+--ignore=plugins\.txt
+--ignore=\.git
+--ignore=\.stowrc
+--ignore=\.gitignore
+--ignore=DS_Store
