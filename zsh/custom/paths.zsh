@@ -1,7 +1,6 @@
 # ─────────────────────────────────────────────
-# Core PATH
+# Core PATH is set in ~/.zshrc (non-machine-specific)
 # ─────────────────────────────────────────────
-export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 
 # ─────────────────────────────────────────────
 # pyenv
@@ -22,7 +21,7 @@ export NVM_DIR="$HOME/.nvm"
 # ─────────────────────────────────────────────
 export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
+  *":$PNPM_HOME:") ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
@@ -31,16 +30,15 @@ esac
 # ─────────────────────────────────────────────
 export PATH="$PATH:$HOME/.pub-cache/bin"
 
-# ─────────────────────────────────────────────
-# Flutter
-# ─────────────────────────────────────────────
-export PATH="/home/akram/develop/flutter/bin:$PATH"
+# Flutter (set `FLUTTER_PATH` in ~/.config/zsh/locals.zsh if present)
+if [ -n "${FLUTTER_PATH:-}" ]; then
+  export PATH="$FLUTTER_PATH:$PATH"
+fi
 
-
 # ─────────────────────────────────────────────
-# Fuzzy Finder
+# Fuzzy Finder (override in locals if needed)
 # ─────────────────────────────────────────────
-FZF_BASE=/usr/bin/fzf  
+FZF_BASE="${FZF_BASE:-/usr/bin/fzf}"
 
 # ─────────────────────────────────────────────
 # Android SDK
@@ -50,13 +48,12 @@ export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/pla
 
 # ─────────────────────────────────────────────
 # Genymotion
-# ─────────────────────────────────────────────
-export PATH="/opt/genymobile/genymotion:$PATH"
+GENYMOTION_PATH="${GENYMOTION_PATH:-/opt/genymobile/genymotion}"
+export PATH="$GENYMOTION_PATH:$PATH"
 
 # ─────────────────────────────────────────────
-# Browser
-# ─────────────────────────────────────────────
-export CHROME_EXECUTABLE=/usr/bin/brave-browser
+# Browser (binary to launch when needed)
+CHROME_EXECUTABLE="${CHROME_EXECUTABLE:-/usr/bin/brave-browser}"
 
 # ─────────────────────────────────────────────
 # OpenSSL (pkg-config / linker)
@@ -64,15 +61,14 @@ export CHROME_EXECUTABLE=/usr/bin/brave-browser
 # System OpenSSL headers live in /usr/lib/pkgconfig.
 # ─────────────────────────────────────────────
 export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
-# LD_LIBRARY_PATH for OpenSSL is not normally needed on Linux;
-# the system linker finds it via ldconfig. Remove if you had no
-# specific reason for it — it can mask linker issues.
 # export LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
 
 # ─────────────────────────────────────────────
 # rbenv
 # ─────────────────────────────────────────────
-eval "$(/usr/bin/rbenv init - --no-rehash zsh)"
+if command -v rbenv >/dev/null 2>&1; then
+  eval "$(rbenv init - --no-rehash zsh)"
+fi
 
 # ─────────────────────────────────────────────
 # PostgreSQL credentials

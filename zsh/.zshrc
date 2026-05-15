@@ -3,6 +3,9 @@
 # ─────────────────────────────────────────────
 export ZSH="$HOME/.oh-my-zsh"
 
+# Core PATH (not machine-specific)
+export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+
 ZSH_THEME=""   # Managed by Starship
 
 zstyle ':omz:update' mode reminder
@@ -17,7 +20,8 @@ plugins=(
   colorize 
   zsh-autosuggestions
   zsh-syntax-highlighting
-  zsh-autocomplete                
+  zsh-autocomplete     
+  fzf-tab           
 )
 
 ZSH_CUSTOM=~/.oh-my-zsh/custom
@@ -42,6 +46,11 @@ fi
 # Starship prompt
 # ─────────────────────────────────────────────
 eval "$(starship init zsh)"
+
+# ─────────────────────────────────────────────
+# zoxide cd
+# ─────────────────────────────────────────────
+eval "$(zoxide init zsh --cmd cd)"
 
 
 # ─────────────────────────────────────────────

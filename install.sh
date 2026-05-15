@@ -15,22 +15,16 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
 
-# ─────────────────────────────────────────────
 # Helpers
-# ─────────────────────────────────────────────
-
-# Print a section header
 section() { echo; echo "── $1 ──"; }
 
-# safe_link <source_in_repo> <link_target_on_disk>
-#
-# Rules:
-#   1. If the target is already a symlink pointing at our source → skip (idempotent).
-#   2. If the target is a real file or directory → back it up, then link.
-#   3. If the target does not exist → link directly.
+# safe_link: create symlink from repo to target, backing up real files
 safe_link() {
   local src="$1"
   local dst="$2"
+
+  local parent
+  parent="$(dirname "$dst")"
 
   # Skip if already correctly linked
   if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
@@ -40,24 +34,50 @@ safe_link() {
 
   # Back up any real (non-symlink) file or directory that is in the way
   if [ -e "$dst" ] && [ ! -L "$dst" ]; then
-    mkdir -p "$BACKUP_DIR"
+    mkdir -p "$BACKUP_DIR" || {
+      echo "  [warn]   couldn't create backup dir $BACKUP_DIR; trying with sudo"
+      sudo mkdir -p "$BACKUP_DIR" && sudo chown -R "$USER":"$USER" "$BACKUP_DIR"
+    }
     echo "  [backup] $dst → $BACKUP_DIR/"
-    mv "$dst" "$BACKUP_DIR/"
+    if ! mv "$dst" "$BACKUP_DIR/" 2>/dev/null; then
+      echo "  [warn]   mv failed due to permissions; retrying with sudo"
+      sudo mv "$dst" "$BACKUP_DIR/"
+      sudo chown -R "$USER":"$USER" "$BACKUP_DIR"
+    fi
   fi
 
   # Remove a stale or wrong symlink
-  [ -L "$dst" ] && rm "$dst"
+  if [ -L "$dst" ]; then
+    if ! rm "$dst" 2>/dev/null; then
+      echo "  [warn]   rm failed due to permissions; retrying with sudo"
+      sudo rm -f "$dst"
+    fi
+  fi
 
-  # Ensure the parent directory exists
-  mkdir -p "$(dirname "$dst")"
+  # Ensure the parent directory exists and is writable
+  if [ ! -d "$parent" ]; then
+    if ! mkdir -p "$parent" 2>/dev/null; then
+      echo "  [warn]   mkdir -p $parent failed; attempting with sudo and fixing ownership"
+      sudo mkdir -p "$parent"
+      sudo chown -R "$USER":"$USER" "$parent"
+    fi
+  else
+    if [ ! -w "$parent" ]; then
+      echo "  [warn]   $parent is not writable; attempting to fix ownership with sudo"
+      sudo chown -R "$USER":"$USER" "$parent" || true
+    fi
+  fi
 
-  ln -s "$src" "$dst"
+  # Create the symlink (try normal user first, fall back to sudo)
+  if ! ln -s "$src" "$dst" 2>/dev/null; then
+    echo "  [warn]   ln -s failed; retrying with sudo and fixing ownership"
+    sudo ln -s "$src" "$dst"
+    sudo chown -h "$USER":"$USER" "$dst" || true
+  fi
   echo "  [link]   $dst → $src"
 }
 
-# ─────────────────────────────────────────────
-# 1. Oh My Zsh
-# ─────────────────────────────────────────────
+# Oh My Zsh
 section "Oh My Zsh"
 
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -68,56 +88,62 @@ else
   echo "  [skip]   ~/.oh-my-zsh already present"
 fi
 
-# ─────────────────────────────────────────────
-# 2. Zsh
-# ~/.zshrc              → dotfiles/zsh/.zshrc
-# ~/.oh-my-zsh/custom   → dotfiles/zsh/custom
-# ─────────────────────────────────────────────
+# Zsh
 section "Zsh"
 
-safe_link "$DOTFILES_DIR/zsh/.zshrc"   "$HOME/.zshrc"
-safe_link "$DOTFILES_DIR/zsh/custom"   "$HOME/.oh-my-zsh/custom"
+safe_link "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
+safe_link "$DOTFILES_DIR/zsh/custom" "$HOME/.oh-my-zsh/custom"
 
-# ─────────────────────────────────────────────
-# 3. Neovim
-# ~/.config/nvim        → dotfiles/nvim
-# ─────────────────────────────────────────────
+# Install plugins listed in plugins.txt into ~/.oh-my-zsh/custom/plugins
+PLUGINS_FILE="$DOTFILES_DIR/plugins.txt"
+if [ -f "$PLUGINS_FILE" ]; then
+  echo; echo "── Zsh plugins ──"
+  mkdir -p "$HOME/.oh-my-zsh/custom/plugins"
+  while IFS= read -r line || [ -n "$line" ]; do
+    # strip comments and trim
+    url="$(printf '%s' "$line" | sed 's/#.*//' | xargs 2>/dev/null || printf '%s' "$line")"
+    [ -z "$url" ] && continue
+    case "$url" in
+      http*://*) ;;
+      *) echo "  [skip]   invalid url: $url"; continue ;;
+    esac
+    name="$(basename "$url" .git)"
+    dest="$HOME/.oh-my-zsh/custom/plugins/$name"
+    if [ -d "$dest" ]; then
+      echo "  [skip]   $name → already present"
+      continue
+    fi
+    echo "  [clone]  $name from $url"
+    if ! git clone --depth 1 "$url" "$dest" 2>/dev/null; then
+      echo "  [warn]   shallow clone failed, retrying full clone"
+      if ! git clone "$url" "$dest"; then
+        echo "  [error]  failed to clone $url"
+      fi
+    fi
+  done < "$PLUGINS_FILE"
+fi
+
+# Neovim
 section "Neovim"
 
-safe_link "$DOTFILES_DIR/nvim"    "$HOME/.config/nvim"
+safe_link "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
-# ─────────────────────────────────────────────
-# 4. Tmux
-# ~/.config/tmux        → dotfiles/tmux
-# ─────────────────────────────────────────────
+# Tmux
 section "Tmux"
 
-safe_link "$DOTFILES_DIR/tmux"    "$HOME/.config/tmux"
+safe_link "$DOTFILES_DIR/tmux" "$HOME/.config/tmux"
 
-
-# ─────────────────────────────────────────────
-# 6. Ghostty
-# ~/.config/ghostty     → dotfiles/ghostty
-# ─────────────────────────────────────────────
+# Ghostty
 section "Ghostty"
 
-safe_link "$DOTFILES_DIR/ghostty"   "$HOME/.config/ghostty"
+safe_link "$DOTFILES_DIR/ghostty" "$HOME/.config/ghostty"
 
-# ─────────────────────────────────────────────
-# 7. Starship
-# ~/.config/starship.toml → dotfiles/starship/starship.toml
-# Note: starship.toml is a single file at the root of ~/.config,
-# not a directory — so we link the file directly, not the folder.
-# ─────────────────────────────────────────────
+# Starship
 section "Starship"
 
-safe_link "$DOTFILES_DIR/starship/starship.toml"   "$HOME/.config/starship.toml"
+safe_link "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
 
-# ─────────────────────────────────────────────
-# 8. Secrets placeholder
-# Creates ~/.config/zsh/secrets.zsh if it does not exist.
-# This file is NOT tracked by git — put PG_PASSWORD etc. here.
-# ─────────────────────────────────────────────
+# Secrets placeholder
 section "Secrets placeholder"
 
 SECRETS_FILE="$HOME/.config/zsh/secrets.zsh"
@@ -133,6 +159,24 @@ EOF
   echo "  [create] $SECRETS_FILE (empty template)"
 else
   echo "  [skip]   $SECRETS_FILE already exists"
+fi
+
+# Local overrides placeholder
+LOCALS_FILE="$HOME/.config/zsh/locals.zsh"
+if [ ! -f "$LOCALS_FILE" ]; then
+  mkdir -p "$(dirname "$LOCALS_FILE")"
+  cat > "$LOCALS_FILE" <<'EOF'
+# ~/.config/zsh/locals.zsh
+# Machine-specific path overrides — NOT tracked by git.
+# Example overrides:
+# export FZF_BASE=/usr/local/bin/fzf
+# export CHROME_EXECUTABLE=/usr/bin/google-chrome
+# export GENYMOTION_PATH=/opt/genymobile/genymotion
+# export FLUTTER_PATH="$HOME/develop/flutter/bin"
+EOF
+  echo "  [create] $LOCALS_FILE (template)"
+else
+  echo "  [skip]   $LOCALS_FILE already exists"
 fi
 
 # ─────────────────────────────────────────────

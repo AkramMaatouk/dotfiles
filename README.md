@@ -1,6 +1,6 @@
 # dotfiles
 
-Minimal, git-ready dotfiles for Linux — Zsh (Oh My Zsh), Kitty, Neovim, Tmux, Pi Agent.
+Minimal, git-ready dotfiles for Linux — Zsh (Oh My Zsh), Neovim, Tmux.
 
 ---
 
@@ -17,8 +17,6 @@ dotfiles/
 │       ├── aliases.zsh
 │       ├── paths.zsh
 │       └── battery.zsh
-├── kitty/
-│   └── kitty.conf      # → ~/.config/kitty/
 ├── nvim/
 │   └── init.lua        # → ~/.config/nvim/
 ├── tmux/
@@ -73,6 +71,26 @@ export PG_PASSWORD=your_password_here
 
 It is sourced automatically at the bottom of `zsh/custom/paths.zsh`.
 
+## Local path overrides
+
+Machine-specific paths or binary locations (for example: custom Flutter installs, Brave/Chrome location, Genymotion, or FZF binary paths) should not live in the tracked `zsh/custom/paths.zsh` file. Put those overrides in:
+
+```
+~/.config/zsh/locals.zsh
+```
+
+The installer will create a small template for this file if it does not exist. `zsh/custom/paths.zsh` sources `~/.config/zsh/locals.zsh` so your overrides take precedence.
+
+Example `~/.config/zsh/locals.zsh`:
+
+```bash
+# Local machine overrides (example)
+export FZF_BASE=/usr/local/bin/fzf
+export CHROME_EXECUTABLE=/usr/bin/google-chrome
+export GENYMOTION_PATH=/opt/genymobile/genymotion
+export FLUTTER_PATH="$HOME/develop/flutter/bin"
+```
+
 ---
 
 ## Adding a new tool config
@@ -88,6 +106,5 @@ It is sourced automatically at the bottom of `zsh/custom/paths.zsh`.
 
 - OS: Linux (Ubuntu / Arch)
 - Shell: Zsh + Oh My Zsh
-- Terminal: Kitty
 - Multiplexer: Tmux
 - Editor: Neovim

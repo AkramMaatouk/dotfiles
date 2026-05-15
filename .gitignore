@@ -4,7 +4,7 @@
 
 # ── Installed plugins ──────────────────────────
 # Cloned by install.sh from plugins.txt; not tracked.
-zsh/.oh-my-zsh/custom/plugins/
+zsh/custom/plugins/
 
 # ── OS / editor noise ──────────────────────────
 .DS_Store
