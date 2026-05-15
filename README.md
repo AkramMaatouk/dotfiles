@@ -23,8 +23,6 @@ dotfiles/
 │   └── init.lua        # → ~/.config/nvim/
 ├── tmux/
 │   └── tmux.conf       # → ~/.config/tmux/
-└── pi-agent/
-    └── config.toml     # → ~/.config/pi-agent/
 ```
 
 ---

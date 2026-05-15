@@ -94,13 +94,6 @@ section "Tmux"
 
 safe_link "$DOTFILES_DIR/tmux"    "$HOME/.config/tmux"
 
-# ─────────────────────────────────────────────
-# 5. Pi Agent
-# ~/.config/pi-agent    → dotfiles/pi-agent
-# ─────────────────────────────────────────────
-section "Pi Agent"
-
-safe_link "$DOTFILES_DIR/pi-agent"  "$HOME/.config/pi-agent"
 
 # ─────────────────────────────────────────────
 # 6. Ghostty
