@@ -72,7 +72,7 @@ export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
 # ─────────────────────────────────────────────
 # rbenv
 # ─────────────────────────────────────────────
-eval "$(~/.rbenv/bin/rbenv init - --no-rehash zsh)"
+eval "$(/usr/bin/rbenv init - --no-rehash zsh)"
 
 # ─────────────────────────────────────────────
 # PostgreSQL credentials
