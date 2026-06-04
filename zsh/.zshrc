@@ -20,7 +20,6 @@ plugins=(
   colorize 
   zsh-autosuggestions
   zsh-syntax-highlighting
-  zsh-autocomplete     
   fzf-tab           
 )
 
@@ -33,6 +32,10 @@ source $ZSH/oh-my-zsh.sh
 source $ZSH_CUSTOM/paths.zsh
 source $ZSH_CUSTOM/aliases.zsh
 source $ZSH_CUSTOM/battery.zsh
+
+bindkey '^[[1;5C' forward-word   # Ctrl+→
+bindkey '^[[1;5D' backward-word  # Ctrl+←
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 
 # ─────────────────────────────────────────────
 # Tmux: auto-attach or create session on shell open

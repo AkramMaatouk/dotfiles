@@ -71,6 +71,11 @@ if command -v rbenv >/dev/null 2>&1; then
 fi
 
 # ─────────────────────────────────────────────
+# cargo
+# ─────────────────────────────────────────────
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# ─────────────────────────────────────────────
 # PostgreSQL credentials
 # PG_USER is fine to export here.
 # Keep PG_PASSWORD in ~/.config/zsh/secrets.zsh (not tracked by git).
@@ -83,3 +88,4 @@ export PG_USER=postgres
 # ─────────────────────────────────────────────
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
