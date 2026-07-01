@@ -7,6 +7,7 @@ alias zshconfig="code ~/.zshrc"
 alias ohmyzsh="code ~/.oh-my-zsh ~/.zshrc"
 alias zshrc="source ~/.zshrc"
 alias dotfiles="code ~/dotfiles"
+alias omzupdate="~/dotfiles/omz-update.sh"
 
 # ── System ────────────────────────────────────
 alias bro="sudo"

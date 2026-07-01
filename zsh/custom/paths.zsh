@@ -17,6 +17,16 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # ─────────────────────────────────────────────
+# bun & bun completion
+# ─────────────────────────────────────────────
+[ -s "/home/akram/.bun/_bun" ] && source "/home/akram/.bun/_bun"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# ─────────────────────────────────────────────
 # pnpm
 # ─────────────────────────────────────────────
 export PNPM_HOME="$HOME/.local/share/pnpm"
